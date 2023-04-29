@@ -55,7 +55,4 @@ components:
                 path: /
                 servicePort: 8080
 volumes:
-    -
-        name: data-volume
-        size: 1Gi
-        type: disk
+    data:
