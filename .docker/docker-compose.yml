@@ -6,24 +6,23 @@ services:
       context: ./../
       dockerfile: .docker/Dockerfile
       target: ${BACKEND_BUILD_TARGET:-dev} # use "prod" for production
-    volumes:
-       - ./../:/usr/src/app/backend
     environment:
-      - POSTGRES_HOST=db # name of the "db" service
-      - POSTGRES_DB=bunny_books
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=need-to-replace
-      - FRONTEND_URL=${FRONTEND_URL-http://localhost:8080}
+      - DB_HOST=db # name of the "db" service
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME:-root}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD:-toor}
     ports:
       - "9000:9000"
     depends_on:
       - mongo
   mongo:
-    image: mongo:4.4
+    image: mongodb/mongodb-community-server:${MONGO_VERSION:latest}
     environment:
-      MONGO_INITDB_DATABASE: main
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME:-root}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD:-toor}
+    # ports:
+    #   - 27017:27017
     volumes:
-      - db:/data/db
+      - data:/data/db
 
 volumes:
-  db:
+  data:
